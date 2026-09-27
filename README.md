@@ -2,20 +2,22 @@
 
 Distributable runtime artifacts for **Monect AI** (the on-device AI in PC Remote
 Receiver). This repo hosts binary release assets only — no source code. The
-main product repositories are private; the artifacts published here contain
-only open-source and freely redistributable components.
+main product repositories are private; the artifacts published here are either
+open-source components (with their license texts preserved inside each
+archive) or Monect-owned assets.
 
 ## Releases
 
 Each release is one versioned, immutable artifact (the tag and file name carry
 the version and platform; published URLs are never re-pointed at different
-bytes). Every archive ships a `provenance.json` recording the exact upstream
+bytes). Binary archives ship a `provenance.json` recording the exact upstream
 commits, build configuration and per-file SHA-256 hashes, plus the full
 license texts.
 
 | Artifact | Contents | Licenses |
 | --- | --- | --- |
 | `qwentts-runtime-v*-win-x64-cuda.zip` | Qwen3-TTS native inference runtime: [qwentts.cpp](https://github.com/ServeurpersoCom/qwentts.cpp) (qwen.dll, qt_* C ABI) + its pinned [ggml](https://github.com/ggml-org/ggml) submodule (CPU + CUDA backends) + NVIDIA cuBLAS/cudart redistributables | MIT (qwentts.cpp, ggml), NVIDIA CUDA Toolkit EULA (cuBLAS/cudart) |
+| `A_cute_futuristic_3D.glb` | Default 3D avatar model for the Monect AI avatar window and peer streaming | Monect in-house asset |
 
 ## GPU-only policy
 
