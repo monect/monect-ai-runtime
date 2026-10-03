@@ -17,8 +17,8 @@ per-file SHA-256 hashes, plus the upstream license texts.
 | Artifact | Contents | Licenses |
 | --- | --- | --- |
 | `qwentts-runtime-v*-win-x64-cuda.zip` | Qwen3-TTS native inference runtime: [qwentts.cpp](https://github.com/ServeurpersoCom/qwentts.cpp) (qwen.dll, qt_* C ABI) + its pinned [ggml](https://github.com/ggml-org/ggml) submodule (CPU + CUDA backends) + NVIDIA cuBLAS/cudart redistributables | MIT (qwentts.cpp, ggml), NVIDIA CUDA Toolkit EULA (cuBLAS/cudart) |
-| `image-runtime-v*-win-x64-cuda.zip` | Native image generation/editing worker (Z-Image-Turbo and FLUX.2 klein): [stable-diffusion.cpp](https://github.com/leejet/stable-diffusion.cpp) + pinned ggml + CUDA, MSVC and OpenMP runtime DLLs | MIT (stable-diffusion.cpp, ggml), bundled dependency licenses, NVIDIA CUDA Toolkit EULA (cuBLAS/cudart) |
-| `image-runtime-v*-win-x64-cpu.zip` | The same native image worker with CPU inference and MSVC/OpenMP runtime DLLs, without CUDA dependencies | MIT (stable-diffusion.cpp, ggml), bundled dependency licenses |
+| `image-runtime-v1.1.0-win-x64-cuda.zip` | Native FLUX.2 klein 4B generation/editing worker: [stable-diffusion.cpp](https://github.com/leejet/stable-diffusion.cpp) + pinned ggml + CUDA, MSVC and OpenMP runtime DLLs | MIT (stable-diffusion.cpp, ggml), bundled dependency licenses, NVIDIA CUDA Toolkit EULA (cuBLAS/cudart) |
+| `image-runtime-v1.1.0-win-x64-cpu.zip` | The same native image worker with CPU inference and MSVC/OpenMP runtime DLLs, without CUDA dependencies | MIT (stable-diffusion.cpp, ggml), bundled dependency licenses |
 | `A_cute_futuristic_3D.glb` | Default 3D avatar model for the Monect AI avatar window and peer streaming | Monect in-house asset |
 
 ## Image generation and editing
@@ -36,8 +36,9 @@ Image installation is optional. It can be selected during Monect AI installation
 or added from the Monect AI page afterwards. One generation/editing feature
 card and install/resume/cancel flow use one model package, enabling both
 operations without downloading a second set of image weights. An existing
-verified FLUX editing installation also supplies generation. Older Z-Image-Turbo installations show an upgrade option in current
-receivers, and their existing generated images remain usable.
+verified FLUX editing installation also supplies generation. Older
+Z-Image-Turbo installations show an upgrade option in current receivers,
+and their existing generated images remain usable.
 
 The installer verifies the runtime archive and all three model components
 against pinned SHA-256 hashes. It reuses the exact verified Qwen3-4B chat
@@ -93,12 +94,13 @@ switch to FLUX generation.
 a3dd5d8fc40aac12649b1227ba9c03c9f103f0c66d5acc648e0e885c43923daa  image-runtime-v1.1.0-win-x64-cuda.zip
 ```
 
-### Legacy runtime
+### Legacy Z-Image-Turbo compatibility
 
 [Image runtime v1.0.0](https://github.com/monect/monect-ai-runtime/releases/tag/image-runtime-v1.0.0)
-remains available unchanged for older Z-Image-Turbo receivers. Runtime 1.1.0
-also retains native compatibility with those generation requests. Current
-receivers use the shared FLUX package and install configuration schema 3, with
+is a legacy release retained for older Z-Image-Turbo receivers. Its model
+weights are downloaded separately by those receivers. New receivers use FLUX.2
+klein 4B. Runtime 1.1.0 also retains native compatibility with older Z-Image
+generation requests. Current receivers use the shared FLUX package and install configuration schema 3, with
 one `image` section. Matching legacy FLUX `imageGeneration`/`imageEditing`
 sections are accepted and normalized; conflicting sections are rejected. Older
 receivers reject schema 3 and retain their compiled defaults. The service keeps
