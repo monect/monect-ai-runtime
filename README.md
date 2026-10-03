@@ -33,10 +33,10 @@ generation and one-reference instruction editing, with
 | CPU | [image-runtime-v1.1.0-win-x64-cpu.zip](https://github.com/monect/monect-ai-runtime/releases/download/image-runtime-v1.1.0/image-runtime-v1.1.0-win-x64-cpu.zip) | Manual deployment; CPU-only editing performance is not qualified. |
 
 Image installation is optional. It can be selected during Monect AI installation
-or added from the Monect AI page afterwards. Generation and editing share one
-model package: installing either enables both without downloading a second set
-of image weights. An existing verified FLUX editing installation also supplies
-generation. Older Z-Image-Turbo installations show an upgrade option in current
+or added from the Monect AI page afterwards. One generation/editing feature
+card and install/resume/cancel flow use one model package, enabling both
+operations without downloading a second set of image weights. An existing
+verified FLUX editing installation also supplies generation. Older Z-Image-Turbo installations show an upgrade option in current
 receivers, and their existing generated images remain usable.
 
 The installer verifies the runtime archive and all three model components
@@ -98,8 +98,11 @@ a3dd5d8fc40aac12649b1227ba9c03c9f103f0c66d5acc648e0e885c43923daa  image-runtime-
 [Image runtime v1.0.0](https://github.com/monect/monect-ai-runtime/releases/tag/image-runtime-v1.0.0)
 remains available unchanged for older Z-Image-Turbo receivers. Runtime 1.1.0
 also retains native compatibility with those generation requests. Current
-receivers use the shared FLUX package and install configuration schema 2;
-older receivers reject that configuration and retain their compiled defaults.
+receivers use the shared FLUX package and install configuration schema 3, with
+one `image` section. Matching legacy FLUX `imageGeneration`/`imageEditing`
+sections are accepted and normalized; conflicting sections are rejected. Older
+receivers reject schema 3 and retain their compiled defaults. The service keeps
+separate generation/editing operation status fields for Android compatibility.
 
 ## Qwen3-TTS GPU policy
 
@@ -126,8 +129,8 @@ with the pinned upstream commits, so extracted files can also be verified.
 ## Updating a runtime
 
 Publish a new versioned release for each runtime update. Current generation
-and editing share one package: update both `imageGeneration` and `imageEditing`
-runtime versions, download URLs, archive SHA-256 hashes, pinned model
-URLs/byte lengths/hashes and matching Rust defaults together. Keep the hosted
+and editing share one package: update the `image` section
+(runtime version, download URL, archive SHA-256 hash and pinned model
+URLs/byte lengths/hashes) and matching Rust defaults together. Keep the hosted
 `pc-receiver/ai-agent-install-config.json` synchronized. Preserve existing
 release assets; publish a new immutable version instead of replacing an archive.
