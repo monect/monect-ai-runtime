@@ -17,20 +17,20 @@ per-file SHA-256 hashes, plus the upstream license texts.
 | Artifact | Contents | Licenses |
 | --- | --- | --- |
 | `qwentts-runtime-v*-win-x64-cuda.zip` | Qwen3-TTS native inference runtime: [qwentts.cpp](https://github.com/ServeurpersoCom/qwentts.cpp) (qwen.dll, qt_* C ABI) + its pinned [ggml](https://github.com/ggml-org/ggml) submodule (CPU + CUDA backends) + NVIDIA cuBLAS/cudart redistributables | MIT (qwentts.cpp, ggml), NVIDIA CUDA Toolkit EULA (cuBLAS/cudart) |
-| `image-runtime-v1.1.0-win-x64-cuda.zip` | Native FLUX.2 klein 4B generation/editing worker: [stable-diffusion.cpp](https://github.com/leejet/stable-diffusion.cpp) + pinned ggml + CUDA, MSVC and OpenMP runtime DLLs | MIT (stable-diffusion.cpp, ggml), bundled dependency licenses, NVIDIA CUDA Toolkit EULA (cuBLAS/cudart) |
-| `image-runtime-v1.1.0-win-x64-cpu.zip` | The same native image worker with CPU inference and MSVC/OpenMP runtime DLLs, without CUDA dependencies | MIT (stable-diffusion.cpp, ggml), bundled dependency licenses |
+| `image-runtime-v1.2.0-win-x64-cuda.zip` | Native FLUX.2 klein 4B generation/editing worker: [stable-diffusion.cpp](https://github.com/leejet/stable-diffusion.cpp) + pinned ggml + CUDA, MSVC and OpenMP runtime DLLs | MIT (stable-diffusion.cpp, ggml), bundled dependency licenses, NVIDIA CUDA Toolkit EULA (cuBLAS/cudart) |
+| `image-runtime-v1.2.0-win-x64-cpu.zip` | The same native image worker with CPU inference and MSVC/OpenMP runtime DLLs, without CUDA dependencies | MIT (stable-diffusion.cpp, ggml), bundled dependency licenses |
 | `A_cute_futuristic_3D.glb` | Default 3D avatar model for the Monect AI avatar window and peer streaming | Monect in-house asset |
 
 ## Image generation and editing
 
 Current receivers use **FLUX.2 klein 4B distilled** for both text-to-image
 generation and one-reference instruction editing, with
-[image runtime v1.1.0](https://github.com/monect/monect-ai-runtime/releases/tag/image-runtime-v1.1.0).
+[image runtime v1.2.0](https://github.com/monect/monect-ai-runtime/releases/tag/image-runtime-v1.2.0).
 
 | Package | Download | Use |
 | --- | --- | --- |
-| CUDA | [image-runtime-v1.1.0-win-x64-cuda.zip](https://github.com/monect/monect-ai-runtime/releases/download/image-runtime-v1.1.0/image-runtime-v1.1.0-win-x64-cuda.zip) | Selected by the receiver installer; compatible NVIDIA CUDA GPU with at least 8 GB VRAM. The 8 GB profile is experimental. Built with CUDA 13.3 for Turing and newer GPUs. |
-| CPU | [image-runtime-v1.1.0-win-x64-cpu.zip](https://github.com/monect/monect-ai-runtime/releases/download/image-runtime-v1.1.0/image-runtime-v1.1.0-win-x64-cpu.zip) | Manual deployment; CPU-only editing performance is not qualified. |
+| CUDA | [image-runtime-v1.2.0-win-x64-cuda.zip](https://github.com/monect/monect-ai-runtime/releases/download/image-runtime-v1.2.0/image-runtime-v1.2.0-win-x64-cuda.zip) | Selected by the receiver installer. At least 16 GB dedicated VRAM is recommended; lower/unknown VRAM permits an explicit experiment when CUDA is available. The 8 GB profile is experimental. Built with CUDA 13.3 for Turing and newer GPUs. |
+| CPU | [image-runtime-v1.2.0-win-x64-cpu.zip](https://github.com/monect/monect-ai-runtime/releases/download/image-runtime-v1.2.0/image-runtime-v1.2.0-win-x64-cpu.zip) | Selected by the receiver installer on Windows x64, independently of the chat backend. CPU inference is slower; broader CPU-only performance qualification remains pending. |
 
 Image installation is optional. It can be selected during Monect AI installation
 or added from the Monect AI page afterwards. One generation/editing feature
@@ -49,13 +49,15 @@ encoder and repackaged VAE are published under Apache 2.0; the receiver installs
 their license and attribution notices separately from the runtime licenses.
 
 The runtime is installed under
-`%LOCALAPPDATA%\Monect\PC Remote Receiver\AIAgent\image-runtime\1.1.0\`.
-For manual deployment, extract the selected archive directly into that folder.
+`%LOCALAPPDATA%\Monect\PC Remote Receiver\AIAgent\image-runtime\1.2.0\`.
+New installers use `cpu/` or `cuda/` subdirectories and record the relative
+worker filename in the model manifest. For manual deployment, match that
+manifest path when extracting the selected archive.
 The shared model package is under `AIAgent\image-models\flux2-klein-4b\1.0.0\`.
 Its manifest records native protocol 2 and generation/editing capabilities;
 legacy FLUX `instructionEdit` manifests are also recognized by current receivers.
 Runtime `provenance.json` advertises `generate` and `instructionEdit`, with
-`maxReferenceImages: 1`.
+`maxReferenceImages: 1`, `progressVersion: 1` and `detailedProgress`.
 
 Windows and Android users can choose a PNG/JPEG or a newly generated image,
 describe a change, compare the source and result, continue editing that
@@ -81,18 +83,36 @@ approximately 66 seconds. These measurements cover editing on one machine;
 they are not a comparative generation benchmark. Other GPU profiles,
 real-photo quality and CPU-only editing remain unverified.
 
-Version 1.1.0 pins stable-diffusion.cpp to
+Version 1.2.0 pins stable-diffusion.cpp to
 `3f8527a46c54ecf4cb4ed6003da8e8982283c73c` and ggml to
 `89c4413f5da6fb20cc796f16033d37f129be81fd`, and includes the stb_image
-decoder/license. Its immutable archive bytes are unchanged by the receiver's
-switch to FLUX generation.
+decoder/license. It adds telemetry schema 1 and advertises `detailedProgress`; the immutable
+1.1.0 release remains available for existing installations.
 
-[SHA256SUMS.txt](https://github.com/monect/monect-ai-runtime/releases/download/image-runtime-v1.1.0/SHA256SUMS.txt):
+[SHA256SUMS.txt](https://github.com/monect/monect-ai-runtime/releases/download/image-runtime-v1.2.0/SHA256SUMS.txt):
 
 ```text
-58b38ccbbb7adad8463e455baa28f3cb34312127c4897be1d2608338a07ba736  image-runtime-v1.1.0-win-x64-cpu.zip
-a3dd5d8fc40aac12649b1227ba9c03c9f103f0c66d5acc648e0e885c43923daa  image-runtime-v1.1.0-win-x64-cuda.zip
+9a78b8f4bd22b7f5b380d6a2b8d2247487db89bdc6571d3817da8d2672dec2a9  image-runtime-v1.2.0-win-x64-cpu.zip
+6f2ac0b227c76c41fc5f79004e71fb4e323f99ffbeead0f6b3f80b5e5dd5340f  image-runtime-v1.2.0-win-x64-cuda.zip
 ```
+
+
+### Detailed progress
+
+Updated Windows and Android apps show live generation/editing progress in chat
+and the image editor, with expandable details. Runtime 1.2.0 reports model
+loading, source/instruction encoding, sampling, VAE decoding and saving;
+tensor/step/tile counters when available; sampler step timings and remaining
+sampling estimates; backend/CPU retry and attempt count; resolved size/seed;
+elapsed/phase/attempt durations; and worker/system memory. One-second heartbeats
+cover long operations without numerical callbacks. GPU free/total memory is
+explicitly measured at backend selection, not presented as a live gauge.
+
+Percentages describe the current phase. Completing sampling does not mean the
+PNG is ready: decoding, saving, validation and publication still follow. No
+whole-job percentage or total ETA is fabricated. Prompts, raw library logs and
+host paths are excluded from progress events. Old workers/clients retain coarse
+states; the Windows feature card offers an update that reuses verified weights.
 
 ### Legacy Z-Image-Turbo compatibility
 
